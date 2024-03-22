@@ -1,0 +1,17 @@
+{
+  "name": "showdown",
+  "homepage": "https://github.com/Fiend-D/simpleServer",
+  "authors": [
+    "Fiend-D <1289014925@qq.com>"
+  ],
+  "description": "for showdown in github",
+  "main": "bower.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

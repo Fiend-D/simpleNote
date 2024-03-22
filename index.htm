@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split Page</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    #content {
+        flex: 1;
+        display: flex;
+    }
+    #text-box {
+        flex: 1;
+        box-sizing: border-box;
+        padding: 10px;
+        font-size: 16px;
+    }
+    #split-div, #table-div {
+        display: none;
+        box-sizing: border-box;
+        padding: 10px;
+        font-size: 16px;
+        background-color: rgb(255, 255, 255);
+        flex: 1;
+    }
+    #buttons {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px hsla(281, 90%, 50%, 0);
+        transition: transform 0.3s;
+    }
+    .action-button {
+        margin-right: 10px;
+        padding: 5px;
+        border: 2px solid #800080;
+        border-radius: 20px;
+        color: #800080;
+        font-family: "宋体", sans-serif;
+        writing-mode: vertical-lr;
+        text-orientation: upright;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 120px;
+    }
+    .hidden {
+        transform: translateY(-50%) translateX(100%);
+    }
+    #printable {
+        display: none;
+    }
+    .dark-code {
+        background-color: #333; /* 深色背景 */
+        color: #fff; /* 白色文字 */
+        padding: 10px; /* 内边距 */
+        border-radius: 5px; /* 圆角边框 */
+    }
+    table {
+      border: 1px solid #000; /* 设置表格边框为1像素的实线黑色边框 */
+      border-collapse: collapse; /* 边框重叠处理 */
+    }
+    th, td {
+      border: 1px solid #000; /* 设置单元格边框为1像素的实线黑色边框 */
+      text-align: center;
+    }
+    code {
+      display: block;
+      padding: 10px;
+      background-color: #f4f4f4;
+      border: 1px solid #ccc;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+</style>
+</head>
+<body>
+    <div id="content">
+        <textarea id="text-box" Spellcheck="false"></textarea>
+        <div id="split-div">This is the split div</div>
+        <div id="table-div">
+            <table border="1" style="width: 100%; height: 20%;" cellspacing="0" cellpadding="0"   >
+                <tbody>
+                    <tr id="header" style="font-weight: bold;">
+                        <td>元素 </td>
+                        <td>Markdown 语法</td>
+                        <td>元素 </td>
+                        <td>Markdown 语法</td>	
+                    </tr>
+                    <tr>
+                        <td>标题(Heading)</td>
+                        <td># H1 ## H2  ### H3</td>
+                        <td>粗体(Bold)</td>
+                        <td>**bold text**</td>
+                    </tr>
+                    <tr>
+                        <td>斜体(Italic)</td>
+                        <td>*italic text*</td>
+                        <td>删除线(Strikethrough)</td>
+                        <td>~~strikethrough~~</td>
+                    </tr>
+        
+                    <tr>
+                        <td>下划线(Underline)</td>
+                        <td>__underline text__</td>
+                        <td>链接(Link)</td>
+                        <td>[link text](https://www.example.com)</td>
+                    </tr>
+                    <tr>
+                        <td>引用(Quote)</td>
+                        <td>&gt; This is a quote</td>
+                        <td>引用块(Blockquote)</td>
+                        <td>> This is a blockquote</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>图片(Image)</td>
+                        <td>![alt text](https://www.example.com/image.jpg)</td>
+                        <td>分割线(Horizontal Rule)</td>
+                        <td>---</td>
+                    </tr>
+
+                    <tr>
+                        <td>代码块(Code Block)</td>
+                        <td>```<br>
+                            // This is a code block<br>
+                            function myFunction() {<br>
+                            &nbsp;&nbsp;console.log("Hello, world!");<br>
+                            }<br>
+                            ```
+                        </td>
+                        <td>代码(Code)</td>
+                        <td>`code`</td>
+                    </tr>
+        
+                    <tr>
+                        <td>脚注(Footnote)</td>
+                        <td>This is a footnote[^1]<br><br>[^1]: This is the footnote content</td>
+                        <td>公式(Math)</td>
+                        <td>$E=mc^2$</td>
+                    </tr>
+        
+                    <tr>
+                        <td>无序列表(Unordered List)</td>
+                        <td>- First item<br>- Second item<br>- Third item</td>
+                        <td>有序列表(Ordered List)</td>
+                        <td>1. First item<br>2. Second item<br>3. Third item</td>
+                    </tr>
+                    <tr>
+                        <td>表格(Table)</td>
+                        <td>
+                            | Header 1 | Header 2 | Header 3 |<br>
+                            | -------- | -------- | -------- |<br>
+                            | Cell 1   | Cell 2   | Cell 3   |<br>
+                            | Cell 4   | Cell 5   | Cell 6   |
+                        </td>
+                        <td>任务列表(Task List)</td>
+                        <td>- [x] Task 1<br>- [ ] Task 2<br>- [ ] Task 3</td>
+                    </tr>
+        
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="buttons" style="background:rgba(255,255,255,0);">
+        <button class="action-button" id="top-button" onclick="showSplitDiv()">预览</button>
+        <button class="action-button" id="bottom-button" onclick="showTableDiv()">Markdown</button>
+    </div>
+    <pre id="printable"></pre>
+    <script src="res/script.js"></script>
+    <script src="/bower_components/showdown/dist/showdown.min.js"></script>
+
+    <script>
+        // 设置页面标题
+        var url = window.location.href;
+        var pathList = url.split('/');
+        document.title ="Note " + pathList[pathList.length-1];
+        
+        // 监听文本框内容变化
+        var topButton = document.getElementById("top-button");
+        var bottomButton = document.getElementById("bottom-button");
+
+        topButton.addEventListener('mouseover', function() {
+            topButton.style.opacity = "1";
+        });
+
+        topButton.addEventListener('mouseout', function() {
+            topButton.style.opacity = "0";
+        });
+
+        bottomButton.addEventListener('mouseover', function() {
+            bottomButton.style.opacity = "1";
+        });
+
+        bottomButton.addEventListener('mouseout', function() {
+            bottomButton.style.opacity = "0";
+        });
+
+        function showSplitDiv() {
+            var splitDiv = document.getElementById("split-div");
+            var tableDiv = document.getElementById("table-div");
+            var contentText = document.getElementById("text-box").value;
+            if (tableDiv.style.display === "block") {
+                tableDiv.style.display = "none";
+            }
+            if (splitDiv.style.display === "none") {
+                splitDiv.style.display = "block";
+                ///创建实例
+                var converter = new showdown.Converter();
+                converter.setOption('tables', true);
+                converter.setOption('tasklists', true);
+                converter.setOption('footnotes', true);
+                converter.setOption('simplifiedAutoLink', true);
+                converter.setOption('strikethrough', true);
+                //进行转换
+                var htmlContent = converter.makeHtml(contentText);
+                // 将解析后的HTML内容插入到目标元素中
+                splitDiv.innerHTML = htmlContent;
+            } else {
+                splitDiv.style.display = "none";
+                splitDiv.innerHTML = "";
+            } 
+        }
+
+        function showTableDiv() {
+            var tableDiv = document.getElementById("table-div");
+            var splitDiv = document.getElementById("split-div");
+            if (splitDiv.style.display === "block") {
+                splitDiv.style.display = "none";
+                splitDiv.innerHTML = "";
+            }
+            if (tableDiv.style.display === "none") {
+                tableDiv.style.display = "block";
+            } else {
+                tableDiv.style.display = "none";
+            }
+        }
+
+        function parseMarkdownToHtml(markdownText) {
+            // markdownText = markdownText.replaceAll('\n','<br/>');
+            // 替换标题
+            markdownText = markdownText.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            markdownText = markdownText.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            markdownText = markdownText.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            markdownText = markdownText.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+            markdownText = markdownText.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
+            markdownText = markdownText.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
+
+            // 替换无序列表
+            // markdownText = markdownText.replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>');
+            // // 匹配不同格式的列表项并用<li>标签包裹
+            markdownText = markdownText.replace(/- (.*?)(?=\n-|\n\n|$)/gs, '<li>$1</li>');
+
+            // 将整个列表用<ul>标签包裹
+            markdownText = '<ul>' + markdownText + '</ul>';
+
+
+            // 替换有序列表
+            markdownText = markdownText.replace(/^(\d+)\. (.*$)/gim, '<ol><li>$2</li></ol>');
+
+            // 替换代码块
+            markdownText = markdownText.replace(/```([^`]+)```/g, '<div class="code-block">$1</div>');
+            
+            // 替换代码
+            markdownText = markdownText.replace(/`([^`]+)`/g, '<code class="dark-code" style="background-color: rgb(167, 131, 12);">$1</code>');
+
+            // 替换表格
+            markdownText = markdownText.replace(/\|(.+)\|/g, '<table><tr><td>$1</td></tr></table>');
+
+            // 替换分割线
+            markdownText = markdownText.replace(/^\s*[-*_]\s*$/gim, '<hr>');
+
+            // 替换粗体
+            markdownText = markdownText.replace(/\*\*(.*)\*\*/g, '<strong>$1</strong>');
+
+            // 替换斜体
+            markdownText = markdownText.replace(/\*(.*)\*/g, '<em>$1</em>');
+
+            // 替换删除线
+            markdownText = markdownText.replace(/~~(.*)~~/g, '<del>$1</del>');
+
+            // 替换链接
+            markdownText = markdownText.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+            return markdownText;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- <html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Minimalist Web Notepad (https://github.com/pereorga/minimalist-web-notepad)">
+    <title>Note</title>
+    <link rel="stylesheet" type="text/css" href="res/styles.css">
+    <link rel="shortcut icon" href="/favicon.ico">
+</head>
+<body>
+    <script>
+        var url = window.location.href;
+        var pathList = url.split('/');
+        document.title ="Note " + pathList[pathList.length-1];
+    </script>  
+    <div class="container">
+        <textarea id="content" Spellcheck="false"></textarea>
+        <table style="height: 200px;width: 100%;text-align: center;font-size: 10px;" border="1" cellspacing="0" cellpadding="0">
+            <tbody>
+                <tr id="header" style="font-weight: bold;">
+                    <td>元素 </td>
+                    <td>Markdown 语法</td>
+                    <td>元素 </td>
+                    <td>Markdown 语法</td>	
+                </tr>
+                <tr>
+                    <td>标题(Heading)</td>
+                    <td># H1 ## H2  ### H3</td>
+                    <td>粗体(Bold)</td>
+                    <td>**bold text**</td>
+                </tr>
+                <tr>
+                    <td>斜体(Italic)</td>
+                    <td>*italic text*</td>
+                    <td>删除线(Strikethrough)</td>
+                    <td>~~strikethrough~~</td>
+                </tr>
+    
+                <tr>
+                    <td>下划线(Underline)</td>
+                    <td>__underline text__</td>
+                    <td>链接(Link)</td>
+                    <td>[link text](https://www.example.com)</td>
+                </tr>
+                <tr>
+                    <td>引用(Quote)</td>
+                    <td>&gt; This is a quote</td>
+                    <td>引用块(Blockquote)</td>
+                    <td>> This is a blockquote</td>
+                    
+                </tr>
+                <tr>
+                    <td>图片(Image)</td>
+                    <td>![alt text](https://www.example.com/image.jpg)</td>
+                    <td>分割线(Horizontal Rule)</td>
+                    <td>---</td>
+                </tr>
+                <tr>
+                    <td>表格(Table)</td>
+                    <td>
+                        | Header 1 | Header 2 | Header 3 |<br>
+                        | -------- | -------- | -------- |<br>
+                        | Cell 1   | Cell 2   | Cell 3   |<br>
+                        | Cell 4   | Cell 5   | Cell 6   |
+                    </td>
+                    <td>分割线(Horizontal Rule)</td>
+                    <td>---</td>
+                </tr>
+    
+                <tr>
+                    <td>脚注(Footnote)</td>
+                    <td>This is a footnote[^1]<br><br>[^1]: This is the footnote content</td>
+                    <td>公式(Math)</td>
+                    <td>$E=mc^2$</td>
+                </tr>
+    
+                <tr>
+                    <td>无序列表(Unordered List)</td>
+                    <td>- First item<br>- Second item<br>- Third item</td>
+                    <td>有序列表(Ordered List)</td>
+                    <td>1. First item<br>2. Second item<br>3. Third item</td>
+                </tr>
+    
+    
+                <tr>
+                    <td>代码块(Code Block)</td>
+                    <td>```<br>
+                        // This is a code block<br>
+                        function myFunction() {<br>
+                            console.log("Hello, world!");<br>
+                        }<br>
+                        ```
+                    </td>
+                    <td>代码(Code)</td>
+                    <td>`code`</td>
+            </tbody>
+        </table>
+    </div>
+    <pre id="printable"></pre>
+    <script src="res/script.js"></script>
+</body>
+</html> -->
+

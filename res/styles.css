@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    background: #ebeef1;
+}
+.container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+#content {
+    font-size: 100%;
+    margin: 0;
+    padding: 20px;
+    overflow-y: scroll;
+    resize: none;
+    width: 100%;
+    height: 80%;
+    min-height: 70%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    outline: none;
+    font-family:"宋体";
+}
+#printable {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #383934;
+    }
+    #content {
+        background: #282923;
+        color: #f8f8f2;
+        border: 0;
+    }
+}
+
+@media print {
+    .container {
+        display: none;
+    }
+    #printable {
+        display: block;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+}
+
